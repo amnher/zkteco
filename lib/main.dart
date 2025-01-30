@@ -32,8 +32,15 @@ class _MyHomePageState extends State<MyHomePage> {
     fingerprintMachine = ZKTeco('192.168.110.201', port: 4370);
   }
 
+  void clearLogs() {
+    setState(() {
+      logs = [];
+    });
+  }
+
   Future<void> connectAndFetchLogs() async {
     await fingerprintMachine!.initSocket();
+    print('Socket initialized.');
     bool isConnected = await fingerprintMachine!.connect();
 
     if (isConnected) {
@@ -57,16 +64,29 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: Column(
           children: [
-            ElevatedButton(
-              onPressed: connectAndFetchLogs,
-              child: Text('Fetch Logs'),
+            Container(
+              color: Colors.grey[200],
+              padding: EdgeInsets.all(16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: connectAndFetchLogs,
+                    child: Text('Fetch Logs'),
+                  ),
+                  ElevatedButton(
+                    onPressed: clearLogs,
+                    child: Text('Clear Logs'),
+                  ),
+                ],
+              ),
             ),
             Expanded(
               child: ListView.builder(
                 itemCount: logs.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    title: Text('User ID: ${logs[index].uid}'),
+                    title: Text('User ID: ${logs[index].id}'),
                     subtitle: Text('Timestamp: ${logs[index].timestamp}'),
                   );
                 },
