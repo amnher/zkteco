@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_zkteco/flutter_zkteco.dart';
 import 'package:flutter_zkteco/src/model/attendance_log.dart';
 import 'package:flutter_zkteco/src/model/user_info.dart';
-import 'package:flutter_zkteco/src/user.dart';
+//import 'package:flutter_zkteco/src/user.dart';
 
 void main() => runApp(MyApp());
 
