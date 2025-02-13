@@ -28,11 +28,19 @@ class _MyHomePageState extends State<MyHomePage> {
   ZKTeco? fingerprintMachine;
   List<AttendanceLog> logs = [];
   List<UserInfo> users = [];
-
-  @override
+  bool isConnected = false;
+  /* @override
   void initState() {
     super.initState();
-    fingerprintMachine = ZKTeco('192.168.110.202', port: 4370);
+   
+  }*/
+
+  void con() async {
+    fingerprintMachine = ZKTeco('192.168.110.201', port: 4370);
+    await fingerprintMachine!.initSocket();
+    isConnected = await fingerprintMachine!.connect();
+    print(isConnected);
+    setState(() {});
   }
 
   void clearLogs() {
@@ -42,11 +50,9 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  Future<void> connectAndFetchLogs() async {
-    await fingerprintMachine!.initSocket();
-    print('Socket initialized.');
+  /*Future<void> connectAndFetchLogs() async {
     bool isConnected = await fingerprintMachine!.connect();
-
+    print(isConnected);
     if (isConnected) {
       List<AttendanceLog> fetchedLogs =
           await fingerprintMachine!.getAttendanceLogs();
@@ -58,12 +64,12 @@ class _MyHomePageState extends State<MyHomePage> {
       print('Failed to connect.');
     }
   }
-
+*/
   Future<void> connectAndFetchUsers() async {
-    await fingerprintMachine!.initSocket();
-    print('Socket initialized.');
-    bool isConnected = await fingerprintMachine!.connect();
+    //await fingerprintMachine!.initSocket();
 
+    //bool isConnected = await fingerprintMachine!.connect();
+    print(isConnected);
     if (isConnected) {
       List<UserInfo> fetchedUsers = await fingerprintMachine!.getUsers();
       setState(() {
@@ -79,7 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Fingerprint Logs'),
+        title: Text('Fingerprint Status: $isConnected'),
       ),
       body: Center(
         child: Column(
@@ -91,7 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton(
-                    onPressed: connectAndFetchLogs,
+                    onPressed: connectAndFetchUsers,
                     child: Text('Fetch Logs'),
                   ),
                   ElevatedButton(
@@ -101,6 +107,23 @@ class _MyHomePageState extends State<MyHomePage> {
                   ElevatedButton(
                     onPressed: clearLogs,
                     child: Text('Clear Logs and Users'),
+                  ),
+                  ElevatedButton(
+                    onPressed: con,
+                    child: Text('CONNECT'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      if (isConnected) {
+                        await fingerprintMachine!.disconnect();
+                        setState(() {
+                          isConnected = false;
+                        });
+                      } else {
+                        print('Machine is not connected.');
+                      }
+                    },
+                    child: Text('DISCONNECT'),
                   ),
                 ],
               ),
