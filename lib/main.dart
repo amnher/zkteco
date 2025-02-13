@@ -29,6 +29,8 @@ class _MyHomePageState extends State<MyHomePage> {
   List<AttendanceLog> logs = [];
   List<UserInfo> users = [];
   bool isConnected = false;
+  String model = '';
+  String status = 'Disconnected';
   /* @override
   void initState() {
     super.initState();
@@ -40,6 +42,11 @@ class _MyHomePageState extends State<MyHomePage> {
     await fingerprintMachine!.initSocket();
     isConnected = await fingerprintMachine!.connect();
     print(isConnected);
+    if (isConnected) {
+      model = await fingerprintMachine!.getDeviceName();
+      status = 'Connected';
+      print(model);
+    }
     setState(() {});
   }
 
@@ -72,6 +79,9 @@ class _MyHomePageState extends State<MyHomePage> {
     print(isConnected);
     if (isConnected) {
       List<UserInfo> fetchedUsers = await fingerprintMachine!.getUsers();
+      for (var user in users) {
+        print('User ID: ${user.userId}, Name: ${user.name}');
+      }
       setState(() {
         users = fetchedUsers;
       });
@@ -85,7 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Fingerprint Status: $isConnected'),
+        title: Text('Fingerprint Status: $status, Model: $model'),
       ),
       body: Center(
         child: Column(
@@ -118,6 +128,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         await fingerprintMachine!.disconnect();
                         setState(() {
                           isConnected = false;
+                          model = '';
+                          status = 'Disconnected';
                         });
                       } else {
                         print('Machine is not connected.');
