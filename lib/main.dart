@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_zkteco/flutter_zkteco.dart';
-import 'package:flutter_zkteco/src/model/attendance_log.dart';
-import 'package:flutter_zkteco/src/model/user_info.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:googleapis/drive/v3.dart';
 import 'package:pluto_grid_plus/pluto_grid_plus.dart';
 import 'package:http/http.dart'
     show BaseClient, Client, BaseRequest, StreamedResponse;
-import 'package:http/io_client.dart';
+//import 'package:http/io_client.dart';
 
 ZKTeco? fingerprintMachine;
-List<AttendanceLog> logs = [];
-List<UserInfo> users = [];
+List<dynamic> logs = [];
+List<dynamic> users = [];
 bool isConnected = false;
 String model = '';
 String status = 'Disconnected';
@@ -62,13 +60,6 @@ class _MyHomePageState extends State<MyHomePage> {
     _ipController.dispose();
     super.dispose();
   }
-
-  @override
-  /*void initState() {
-    super.initState();
-    con();
-    connectAndFetchLogs();
-  }*/
 
   void con() async {
     // Show dialog to get IP address
@@ -184,12 +175,6 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  //final List<String> dataList = ['John Doe', 'Jane Smith', 'Alice Johnson'];
-  final List<Map<String, dynamic>> dataList = [
-    {'name': 'John Doe', 'age': 30, 'city': 'New York'},
-    {'name': 'Jane Smith', 'age': 25, 'city': 'Los Angeles'},
-    // Add more items as needed
-  ];
   @override
   Widget build(BuildContext context) {
     List<PlutoColumn> logColumns = [
@@ -293,7 +278,6 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           children: [
             Container(
-              color: Colors.grey[200],
               padding: EdgeInsets.all(16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
